@@ -1104,6 +1104,27 @@ class StateFrame(CNCRibbon.PageExLabelFrame):
 		self.sendGCode(WCS[wcsvar.get()])
 		self.sendGCode("$G")
 
+
+#===============================================================================
+# LHB04 Page
+#===============================================================================
+class LHB04Frame(CNCRibbon.PageLabelFrame):
+	def __init__(self, master, app):
+		CNCRibbon.PageLabelFrame.__init__(self, master, "LHB04", app)
+
+		row,col = 0,0
+		Label(self, text="Z").grid(row=row, column=col)
+
+		col += 3
+		Label(self, text="Y").grid(row=row, column=col)
+
+		# ---
+		row += 1
+		col = 0
+
+		width=3
+		height=2
+
 #===============================================================================
 # Control Page
 #===============================================================================

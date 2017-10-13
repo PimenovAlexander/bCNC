@@ -71,6 +71,8 @@ from TerminalPage import TerminalPage
 from ProbePage    import ProbePage
 from EditorPage   import EditorPage
 
+from LHB04        import LHB04Interface
+
 _openserial = True	# override ini parameters
 _device     = None
 _baud       = None
@@ -228,6 +230,8 @@ class Application(Toplevel,Sender):
 		self.editor   = Page.frames["Editor"].editor
 		self.terminal = Page.frames["Terminal"].terminal
 		self.buffer   = Page.frames["Terminal"].buffer
+                self.lhb04    = LHB04Interface()
+                self.lhb04.usbconnect()
 
 		# XXX FIXME Do we need it or I can takes from Page every time?
 		self.autolevel = Page.frames["Probe:Autolevel"]
@@ -453,6 +457,7 @@ class Application(Toplevel,Sender):
 		self._inFocus	= False
 		self._insertCount = 0	# END - insertCount lines where ok was applied to for $xxx commands
 		self.monitorSerial()
+		self.monitorLHB04()
 		self.canvasFrame.toggleDrawFlag()
 
 		self.paned.sash_place(0, Utils.getInt(Utils.__prg__, "sash", 340), 0)
@@ -2077,6 +2082,7 @@ class Application(Toplevel,Sender):
 		Sender.close(self)
 		try:
 			self.dro.updateState()
+			self.lhb04.updateCoords()
 		except TclError:
 			pass
 
@@ -2309,7 +2315,7 @@ class Application(Toplevel,Sender):
 			self.execute(cmd)
 		except Empty:
 			pass
-
+                
 		# Load file from pendant
 		if self._pendantFileUploaded!=None:
 			self.load(self._pendantFileUploaded)
@@ -2329,6 +2335,7 @@ class Application(Toplevel,Sender):
 			self._pause = ("Hold" in state)
 			self.dro.updateState()
 			self.dro.updateCoords()
+			self.lhb04.updateCoords()
 			self.canvas.gantry(CNC.vars["wx"],
 					   CNC.vars["wy"],
 					   CNC.vars["wz"],
@@ -2392,6 +2399,53 @@ class Application(Toplevel,Sender):
 			typ, val, tb = sys.exc_info()
 			traceback.print_exception(typ, val, tb)
 		self.after(MONITOR_AFTER, self.monitorSerial)
+
+
+        
+
+        def _monitorLHB04(self):
+                #print "#"
+                 
+                # Check LHB04
+                try:
+			data = self.lhb04.pollPendant()
+			if data is None:
+                            return
+                        
+                        print data
+                        
+                        
+                        clickValue = data[4]
+                        if clickValue < 127:
+                            for i in xrange(clickValue):
+                                if data[3] == 17:
+                                    self.control.moveXup();
+                                if data[3] == 18:
+                                    self.control.moveYup();
+                                if data[3] == 19:
+                                    self.control.moveZup();
+                        else:                             
+                            clickValue = 256-clickValue
+                            for i in xrange(clickValue):
+                                if data[3] == 17:
+                                    self.control.moveXdown();
+                                if data[3] == 18:
+                                    self.control.moveYdown();
+                                if data[3] == 19:
+                                    self.control.moveZdown();                                
+                            
+			#self.execute(cmd)
+		except Empty:
+			pass
+        
+        def monitorLHB04(self):
+                try:
+                        self._monitorLHB04()
+                except:
+                        typ, val, tb = sys.exc_info()
+                        traceback.print_exception(typ, val, tb)
+                self.after(10, self.monitorLHB04)
+
 
 	#-----------------------------------------------------------------------
 	def get(self, section, item):
