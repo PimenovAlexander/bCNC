@@ -5,6 +5,20 @@ import usb.core
 
 from CNC import CNC
 
+
+#
+#   Button Mapping
+# 
+#
+#     RESET=23       STOP=22
+#     HOME=1         START/PAUSE=2         REWIND=3       PROBE-Z=4
+#     SPINDLE=12     =1/2=6                =0=7           SAFE-Z=8
+#     TOHOME=9       MACRO-1=10            MACRO-2=11     MACRO-3=5
+#     STEP++=13      MPG=14                MACRO-6=15     MACRO-7=16
+
+
+
+
 class LHB04Interface:
     
     def __init__(self):

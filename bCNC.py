@@ -2433,6 +2433,18 @@ class Application(Toplevel,Sender):
                                     self.control.moveYdown();
                                 if data[3] == 19:
                                     self.control.moveZdown();                                
+                        
+                        if data[1] == 7:      # Zero 
+                            if data[3] == 17:
+                                self.dro.setX0();
+                            if data[3] == 18:
+                                self.dro.setY0();
+                            if data[3] == 19:
+                                self.dro.setZ0();     
+                                
+                        if data[1] == 22:
+                            self.stopRun();
+                            
                             
 			#self.execute(cmd)
 		except Empty:
