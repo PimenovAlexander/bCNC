@@ -62,19 +62,32 @@ class LHB04Interface:
     def usbconnect(self):    
         self.dev = usb.core.find(idVendor=0x10ce, idProduct=0xeb70)
         if self.dev is None:
-            sys.exit("No CNC remote found in the system");
+            print ("No CNC remote found in the system");
+            return
+            
+        print("USB HB04 pendant found")
+        print("Bus     :" + str(self.dev.bus))
+        print("Address :" + str(self.dev.address))
+        # print("Ports :" + str(self.dev.port_numbers))
+        print("Port    :" + str(self.dev.port_number))
+        
 
         try:
             if self.dev.is_kernel_driver_active(0) is True:
                 self.dev.detach_kernel_driver(0)
         except usb.core.USBError as e:
-            sys.exit("Kernel driver won't give up control over device: %s" % str(e))
-
+            print ("Kernel driver won't give up control over device: %s" % str(e))
+            print ("You can add udev rule:")
+            print ("SUBSYSTEM==\"usb\", ATTR{idVendor}==\"0x10ce\", ATTR{idProduct}==\"0xeb70\", MODE=\"0666\"")
+            print ("to /etc/udev/rules.d/99-lhb04.rules ")
+            print ("udevadm control --reload-rules")
         try:
             self.dev.set_configuration()
             self.dev.reset()
         except usb.core.USBError as e:
-            sys.exit("Cannot set configuration the device: %s" % str(e))
+            print ("Cannot set configuration the device: %s" % str(e))
+            self.dev = None;
+            return            
 
         self.endpoint = self.dev[0][(0,0)][0]
 
@@ -96,7 +109,9 @@ class LHB04Interface:
         return [ value & 0xFF, (value >> 8) & 0xFF ]
 
 
-    def updateOutput(self):       
+    def updateOutput(self):    
+        if self.dev is None :
+            return;
         datain = [ 0x00 ] * 42
         datain[ 0: 3]  = [ 0xFE, 0xFD, 0x0C ]
 
@@ -144,6 +159,8 @@ class LHB04Interface:
             # print out
 
     def pollPendant(self):
+        if self.dev is None:
+            return
         try:
             data = self.dev.read(self.endpoint.bEndpointAddress, self.endpoint.wMaxPacketSize, timeout=1)
             if data is not None and len(data) > 2:                
