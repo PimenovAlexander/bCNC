@@ -704,6 +704,9 @@ class ControlFrame(CNCRibbon.PageLabelFrame):
 			self.event_generate("<<Status>>",
 				data=_("Step: %g    Zstep:%g ")%(s,zs))
 				#data=(_("Step: %g    Zstep:%g ")%(s,zs)).encode("utf8"))
+				
+               #self.app.lhb04.updateControlParams(self.app)
+                
 
 	#----------------------------------------------------------------------
 	@staticmethod
@@ -1108,7 +1111,7 @@ class StateFrame(CNCRibbon.PageExLabelFrame):
 #===============================================================================
 # LHB04 Page
 #===============================================================================
-class LHB04Frame(CNCRibbon.PageLabelFrame):
+class LHB04Frame1(CNCRibbon.PageLabelFrame):
 	def __init__(self, master, app):
 		CNCRibbon.PageLabelFrame.__init__(self, master, "LHB04", app)
 

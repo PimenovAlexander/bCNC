@@ -285,6 +285,16 @@ class SerialFrame(CNCRibbon.PageLabelFrame):
 		self.connectBtn.grid(row=row, column=col, rowspan=3, padx=0, pady=0, sticky=NSEW)
 		tkExtra.Balloon.set(self.connectBtn, _("Open/Close serial port"))
 		self.grid_columnconfigure(1, weight=1)
+		
+		# ---
+		col = 0
+		row = 4
+		b = Button(self, text=_("Connect to LHB04"), padx=1, pady=1)
+		b.grid(row=row, column=col, sticky=W)
+		tkExtra.Balloon.set(b, _("Connect to LHB04"))
+		self.autostart.set(True)
+		self.addWidget(b)
+		
 
 	#-----------------------------------------------------------------------
 	def ctrlChange(self):
@@ -297,6 +307,30 @@ class SerialFrame(CNCRibbon.PageLabelFrame):
 		Utils.setStr("Connection", "port",        self.portCombo.get())
 		Utils.setStr("Connection", "baud",        self.baudCombo.get())
 		Utils.setBool("Connection", "openserial", self.autostart.get())
+
+#===============================================================================
+# File Page
+#===============================================================================
+class LHB04Frame(CNCRibbon.PageLabelFrame):
+    def __init__(self, master, app):
+        print ("LHB04Frame called")
+        CNCRibbon.PageLabelFrame.__init__(self, master, "LHB04", app)       
+        # ---
+        col,row=0,0
+        b = Label(self, text=_("Port:"))
+        b.grid(row=row,column=col,sticky=E)
+        self.addWidget(b)
+        self.portCombo = tkExtra.Combobox(self, False, background="White", width=16)
+        self.portCombo.grid(row=row, column=col+1, sticky=EW)
+        self.addWidget(self.portCombo)   
+        self.grid_columnconfigure(1, weight=1)
+     
+        
+    #-----------------------------------------------------------------------
+    def ctrlChange(self):
+        pass
+            
+		
 
 #===============================================================================
 # File Page

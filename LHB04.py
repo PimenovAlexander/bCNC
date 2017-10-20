@@ -22,7 +22,7 @@ from CNC import CNC
 class LHB04Interface:
     
     def __init__(self):
-        self.dev = None;
+        self.dev = None;       #None fot dev is a symbol that device is disconnected
         self.endpoint = None;
        
        # Current state. update it and call updateOutput()
@@ -78,7 +78,7 @@ class LHB04Interface:
         except usb.core.USBError as e:
             print ("Kernel driver won't give up control over device: %s" % str(e))
             print ("You can add udev rule:")
-            print ("SUBSYSTEM==\"usb\", ATTR{idVendor}==\"0x10ce\", ATTR{idProduct}==\"0xeb70\", MODE=\"0666\"")
+            print ("SUBSYSTEM==\"usb\", ENV{DEVTYPE}==\"usb_device\", ATTR{idVendor}==\"10ce\", ATTR{idProduct}==\"eb70\", MODE=\"0777\"")
             print ("to /etc/udev/rules.d/99-lhb04.rules ")
             print ("udevadm control --reload-rules")
         try:
@@ -167,7 +167,8 @@ class LHB04Interface:
                 return data
         except usb.core.USBError as e:
             if e.errno != 110: # 110 is a timeout.
-                sys.exit("Error readin data: %s" % str(e))
+                dev = None
+                return None
         return None
     
     # ======== Related to CNC
@@ -181,6 +182,11 @@ class LHB04Interface:
         self.mpos_y = CNC.vars["my"];
         self.mpos_z = CNC.vars["mz"];    
                 
+        self.updateOutput();
+        
+    def updateControlParams(self, app):
+        self.step = app.control.step.get();
+        print NewStep(self.step);
         self.updateOutput();
     
 ##====================================================================================================    

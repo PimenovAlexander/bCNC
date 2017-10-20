@@ -124,6 +124,7 @@ class Page(Ribbon.Page):
 			for f in frames:
 				w = f(self.master._pageFrame, self.app)
 				Page.frames[w.name] = w
+				print ("<" + w.name + ">")
 
 	#----------------------------------------------------------------------
 	# Add a widget in the widgets list to enable disable during the run
