@@ -2463,7 +2463,7 @@ class Application(Toplevel,Sender):
                 except:
                         typ, val, tb = sys.exc_info()
                         traceback.print_exception(typ, val, tb)
-                self.after(10, self.monitorLHB04)
+                self.after(1, self.monitorLHB04)
 
 
 	#-----------------------------------------------------------------------
