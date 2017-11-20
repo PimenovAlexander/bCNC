@@ -2445,6 +2445,13 @@ class Application(Toplevel,Sender):
                         if data[1] == 22:
                             self.stopRun();
                             
+                        if data[i] == 10:
+                            print "Step should change to 0.01"
+                            self.control.setStep(0.01);
+                        if data[i] == 11:
+                            print "Step should change to 0.1"
+                            self.control.setStep(0.1);
+                            
                             
 			#self.execute(cmd)
 		except Empty:

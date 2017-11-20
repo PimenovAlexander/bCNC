@@ -309,6 +309,23 @@ class SerialFrame(CNCRibbon.PageLabelFrame):
 		Utils.setBool("Connection", "openserial", self.autostart.get())
 
 #===============================================================================
+# LHB04 settings
+#===============================================================================
+
+class LHB04Frame(CNCRibbon.PageLabelFrame):
+        def __init__(self, master, app):
+		CNCRibbon.PageLabelFrame.__init__(self, master, "LHB04Frame", app)
+
+		self.autostart = BooleanVar()
+
+		# ---
+		col,row=0,0
+		b = Label(self, text=_("Port:"))
+		b.grid(row=row,column=col,sticky=E)
+		self.addWidget(b)
+
+
+#===============================================================================
 # File Page
 #===============================================================================
 class LHB04Frame(CNCRibbon.PageLabelFrame):
@@ -344,5 +361,4 @@ class FilePage(CNCRibbon.Page):
 	# Add a widget in the widgets list to enable disable during the run
 	#----------------------------------------------------------------------
 	def register(self):
-		self._register((FileGroup, PendantGroup, OptionsGroup, CloseGroup),
-			(SerialFrame,))
+		self._register((FileGroup, PendantGroup, OptionsGroup, CloseGroup), (SerialFrame, LHB04Frame))
