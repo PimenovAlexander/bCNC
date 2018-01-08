@@ -230,8 +230,8 @@ class Application(Toplevel,Sender):
 		self.editor   = Page.frames["Editor"].editor
 		self.terminal = Page.frames["Terminal"].terminal
 		self.buffer   = Page.frames["Terminal"].buffer
-                self.lhb04    = LHB04Interface()
-                self.lhb04.usbconnect()
+		self.lhb04    = LHB04Interface()
+		self.lhb04.usbconnect()
 
 		# XXX FIXME Do we need it or I can takes from Page every time?
 		self.autolevel = Page.frames["Probe:Autolevel"]
@@ -2424,6 +2424,12 @@ class Application(Toplevel,Sender):
                                     self.control.moveYup();
                                 if data[3] == 19:
                                     self.control.moveZup();
+                                if data[3] == 21:
+                                    curfeed = self.gstate.override.get();
+                                    self.gstate.override.set(curfeed + 1);
+                                    self.gstate.overrideChange();
+                                    print "Feed was ", curfeed;
+
                         else:                             
                             clickValue = 256-clickValue
                             for i in xrange(clickValue):
@@ -2433,6 +2439,12 @@ class Application(Toplevel,Sender):
                                     self.control.moveYdown();
                                 if data[3] == 19:
                                     self.control.moveZdown();                                
+                                if data[3] == 21:
+                                    curfeed = self.gstate.override.get();
+                                    self.gstate.override.set(curfeed - 1);
+                                    self.gstate.overrideChange();
+                                    print "Feed was ", curfeed;
+
                         
                         if data[1] == 7:      # Zero 
                             if data[3] == 17:
@@ -2445,10 +2457,10 @@ class Application(Toplevel,Sender):
                         if data[1] == 22:
                             self.stopRun();
                             
-                        if data[i] == 10:
+                        if data[1] == 10:
                             print "Step should change to 0.01"
                             self.control.setStep(0.01);
-                        if data[i] == 11:
+                        if data[1] == 11:
                             print "Step should change to 0.1"
                             self.control.setStep(0.1);
                             

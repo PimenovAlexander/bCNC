@@ -181,7 +181,13 @@ class LHB04Interface:
         self.mpos_x = CNC.vars["mx"];
         self.mpos_y = CNC.vars["my"];
         self.mpos_z = CNC.vars["mz"];    
-                
+        
+        self.feed    = int(CNC.vars["curfeed"]);
+        self.spindle = int(CNC.vars["curspindle"]);
+        self.feed_ovr     = int(CNC.vars["_OvFeed"]);
+        self.spindle_ovr  = int(CNC.vars["_OvSpindle"]);
+        
+
         self.updateOutput();
         
     def updateControlParams(self, app):
